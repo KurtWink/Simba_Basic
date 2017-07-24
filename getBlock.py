@@ -5,6 +5,22 @@ import time
 import numpy
 import requests
 
+def jqViewTest():
+
+    url = "https://in2lytics.gridstate.io/api/default_project/series/samples_from_phil_multispeak_ami_outage_events_20170711_tsv/data"
+
+    querystring = {"start_time": "1474907856000", "end_time": "1474927200000"}
+
+    headers = {
+        'authorization': "Basic S3VydFdpbmtlbG1hbm46a3VydHc=",
+        'cache-control': "no-cache",
+
+    }
+
+    response = requests.request("GET", url, headers=headers, params=querystring, verify=False)
+
+    return json.loads(response.text)
+
 
 def buildURL(project, series):
     return "https://in2lytics.gridstate.io/api/" + project + "/series/" + series + "/data"

@@ -1,4 +1,67 @@
-class zeroData(object):
+class sampleVariableObject:  # Class object name would go here
+    def __init__(self, name, value):
+        """
+        This is a custom variable, in order to add this variable to the displayed list it must be added to the catalog
+        """
+        self.name = name #"Name of variable that will be displayed in the GUI list"
+        self.value = value #"Value as a string that will be user inputted onto the variable in the GUI, and is None until a user defines it"
+
+    def getValue(self):
+        return self.value
+
+    def setValue(self, val):
+        self.value = val
+
+    def getName(self):
+        return self.name
+    def setName(self,name):
+        self.name = name
+
+class varTest:
+    def __init__(self):
+        self.name = "Var Test"
+        self.attribute = ""
+        self.vars = [sampleVariableObject("hello", "yes")]
+    def getVars(self):
+        return self.vars
+    def functionX(self, globalVarCollection):
+        jObj = globalVarCollection['dataSet']
+        jObj['series'][0]['metrics']['double_value']['doubleValues'] = list(
+             map(lambda x: x * 0, jObj['series'][0]['metrics']['double_value']['doubleValues']))
+        print(jObj['series'][0]['metrics']['double_value']['doubleValues'])
+
+
+class varUpdateTest:
+    def __init__(self):
+        self.name = "Var Update Test"
+        self.attribute = ""
+        self.vars = [sampleVariableObject("new", "yes"), sampleVariableObject('hi', "")]
+    def getVars(self):
+        return self.vars
+    def functionX(self, globalVarCollection):
+        jObj = globalVarCollection['dataSet']
+        jObj['series'][0]['metrics']['double_value']['doubleValues'] = list(
+             map(lambda x: x * 0, jObj['series'][0]['metrics']['double_value']['doubleValues']))
+        print(jObj['series'][0]['metrics']['double_value']['doubleValues'])
+
+
+
+
+class zeroDataFull():
+    def __init__(self):
+        self.name = "Zero Data"
+        self.attribute = "Zeroed"
+        self.vars = []
+
+    def getVars(self):
+        return self.vars
+
+    def functionX(self, globalVarCollection):
+        jObj = globalVarCollection['dataSet']
+        jObj['series'][0]['metrics']['double_value']['doubleValues'] = list(
+             map(lambda x: x * 0, jObj['series'][0]['metrics']['double_value']['doubleValues']))
+        print(jObj['series'][0]['metrics']['double_value']['doubleValues'])
+class zeroData():
 
     def __init__(self):
         self.name = "Zero Data"
