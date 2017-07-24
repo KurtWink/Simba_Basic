@@ -124,9 +124,11 @@ class Simba:
                 command=Simba_support.clearData,
                 font=font9,
                 foreground="#000000",
-                label="Clear Data")
+                label="Clear Data",
+                state=DISABLED)
         self.file.add_separator(
                 background="#d9d9d9")
+
         self.open_from = Menu(top,tearoff=0)
         self.file.add_cascade(menu=self.open_from,
                 activebackground="#7f0000",
@@ -160,7 +162,8 @@ class Simba:
                 command=Simba_support.saveLocalData,
                 font=font9,
                 foreground="#000000",
-                label="Save As")
+                label="Save As",
+                state=DISABLED)
         self.file.add_command(
                 activebackground="#d8d8d8",
                 activeforeground="#000000",
@@ -168,7 +171,8 @@ class Simba:
                 command=lambda:openExportPanel(),
                 font=font9,
                 foreground="#000000",
-                label="Export")
+                label="Export",
+                state=DISABLED)
         self.modules = Menu(top,tearoff=0)
         self.menubar.add_cascade(menu=self.modules,
                 activebackground="#7f0000",

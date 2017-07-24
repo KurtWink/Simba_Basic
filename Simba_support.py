@@ -18,13 +18,29 @@ try:
 except ImportError:
     import tkinter.ttk as ttk
     py3 = 1
-
+from base64 import b64encode
+from tkinter import filedialog
+from tkinter import messagebox
+import json
+import requests
+import time
+import importlib
 def set_Tk_var():
     # Vars for Main Frsmr
     global combobox
     combobox = StringVar()
     global loadBarVar
     loadBarVar = IntVar()
+    loadBarVar.set(0)
+    global epocCheck
+    global dataSet
+    dataSet = None
+    epocCheck = None
+    global operationSet
+    global varsAndFunc
+    global localInputPathVar
+    localInputPathVar = StringVar()
+
 
     #Vars for HostedService
     global projectInputVar
@@ -62,17 +78,37 @@ def set_Tk_var():
     global nameChangeVar
     nameChangeVar = StringVar()
 #Methods for the Main Frame
+
+def doSelectedOps(var):
+
+    for x in var:
+        try:
+            globals()['varsAndFunc'][x].functionX(globals())
+            globals()['dataSet']['series'][0]['tags'][globals()['varsAndFunc'][x].name] = "1"
+        except ValueError:
+            messagebox.showerror("Error",
+                                 "There is no data set loaded or an invalid range of values have been selected\nPlease review your dataset options")
+
 def clearData():
     print('Simba_support.clearData')
     sys.stdout.flush()
 
 def getLocalData():
-    print('Simba_support.getLocalData')
-    sys.stdout.flush()
+    x_file = open(localInputPathVar.get())
+
+    globals()['dataSet'] = json.loads(x_file.read())
+    if ('error' in globals()['dataSet']) or (globals()['dataSet'] == {}):
+        globals()["dataSet"] = None
+        globals()["loadVar"].set(0)
+        raise ValueError
+    else:
+        globals()['loadVar'].set(100)
+    x_file.close()
 
 def loadMod():
-    print('Simba_support.loadMod')
-    sys.stdout.flush()
+    place = filedialog.askopenfilename(filetypes=("Text File", '*.txt'))
+    if place is not None:
+        globals()['varsAndFunc'] = importlib.import_modle((place))
 
 def openHelp():
     print('Simba_support.openHelp')
@@ -83,12 +119,16 @@ def saveLocalData():
     sys.stdout.flush()
 #Methods for Export
 def buildUrlOut():
-    print('exportPanel_support.buildUrlOut')
-    sys.stdout.flush()
+    return "https://in2lytics.gridstate.io/api/" + projectOutVar.get() + "/series/"
 
 def pushDataSet():
-    print('exportPanel_support.pushDataSet')
-    sys.stdout.flush()
+    url = buildUrlOut()
+    auth = b64encode(bytes(usernameOutVar.get() + ':' + passwordOutVar.get(), "utf-8")).decode("ascii")
+    if not (nameChangeVar.get() == "" or nameChangeVar.get() is None):
+        dataSet['series'][0]['tags']['file-name'] = nameChangeVar.get()
+    headers = {'Authorization': 'Basic %s' % auth}
+    response = requests.request("POST", url, headers=headers, json=globals()['dataSet'], verify=False)
+    return response
 def init(top, gui, *args, **kwargs):
     global w, top_level, root
     w = gui
@@ -96,12 +136,39 @@ def init(top, gui, *args, **kwargs):
     root = top
 #Methods for  Hosted Service
 def buildURL():
-    print('hostedService_support.buildURL')
-    sys.stdout.flush()
+    return "https://in2lytics.gridstate.io/api/" + projectInputVar.get() + "/series/" + seriesInputVar.get() + "/data"
+def getJsonSet(auth, url):
 
+    if epocCheck is None:
+        raise ValueError()
+    if epocCheck:
+        startEpoch = globals()['startTimeEpoVar'].get()
+        endEpoch = globals()['endingTimeEpoVar'].get()
+    else:
+        pattern = '%d.%m.%Y %H:%M:%S'
+        startEpoch = int(
+            time.mktime(time.strptime(globals()['startingTimeStdVar'].get(), pattern))) * 1000
+        endEpoch = int(
+            time.mktime(time.strptime(globals()['endingTimeStdVar'].get(), pattern))) * 1000
+
+    querystring = {"start_time": ""+str(startEpoch), "end_time": ""+str(endEpoch)}
+    print(querystring)
+    headers = {'Authorization': 'Basic %s' % auth}
+
+    response = requests.request("GET", url, headers=headers, params=querystring, verify=False)
+
+    return json.loads(response.text)
 def getData():
-    print('hostedService_support.getData')
-    sys.stdout.flush()
+    url = urlInputVar.get()
+    userAndPass = b64encode(bytes(usernameInputVar.get() + ':' + passwordInputVar.get(), "utf-8")).decode("ascii")
+    globals()['dataSet'] = getJsonSet(userAndPass, url)
+    print(globals()['dataSet'])
+    if ('error' in globals()['dataSet']) or (globals()['dataSet'] == {}):
+        globals()["dataSet"] = None
+        globals()["loadVar"].set(0)
+        raise ValueError
+    else:
+        globals()['loadVar'].set(100)
 def destroy_window():
     # Function which closes the window.
     global top_level
