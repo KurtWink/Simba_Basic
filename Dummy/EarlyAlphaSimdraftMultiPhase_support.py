@@ -14,7 +14,8 @@ import json
 import requests
 import time
 import Dummy.genDataList
-
+import importlib
+import os
 
 try:
     from Tkinter import *
@@ -65,15 +66,22 @@ def set_Tk_var():
     seriesOutputVar = StringVar()
     global urlOutputVar
     urlOutputVar = StringVar()
+    global varEditVar
+    varEditVar = StringVar()
+    operationSet = Dummy.genDataList.genData()
 
+
+
+
+def getEditVar():
+    return varEditVar.get()
 def buildURL():
     return "https://in2lytics.gridstate.io/api/" + projectInputVar.get() + "/series/" + seriesInputVar.get() + "/data"
 
 def buildUrlOut():
     return "https://in2lytics.gridstate.io/api/" + projectOutputVar.get() + "/series/"
 
-def updateVarSupport(index):
-    return Dummy.genDataList.genData()[index].getVars()
+
 
 def doSelectedOps(var):
 
@@ -89,15 +97,15 @@ def epochTime():
     globals()['epocCheck'] = True
 
 def findLocalFilePath():
-    localInputPathVar.set(filedialog.askopenfilename(initialdir="/", title="Select file",
-                                                                  filetypes=(
-                                                                  ("all files", "*.*"), ("all files", "*.*"))))
+
+    file = filedialog.askopenfile(mode='a')
+    localInputPathVar.set(file.name)
     if not ((localInputPathVar.get() is None) or (localInputPathVar.get() == "")):
         return True
 
 def findLocalOutPath():
-    localOutPathVar.set(filedialog.asksaveasfilename(filetypes = (("text files","*.txt"),("all files","*.*"))))
-
+    file = filedialog.asksaveasfile(mode='a')
+    localOutPathVar.set(file.name)
 def getJsonSet(auth, url):
 
     if epocCheck is None:
@@ -132,9 +140,16 @@ def getInputDataFromLogin():
         globals()['loadVar'].set(100)
 
 def getLocalData():
-    print('EarlyAlphaSimdraftMultiPhase_support.getLocalData')
-    sys.stdout.flush()
+    x_file = open(localInputPathVar.get())
 
+    globals()['dataSet'] = json.loads(x_file.read())
+    if ('error' in globals()['dataSet']) or (globals()['dataSet'] == {}):
+        globals()["dataSet"] = None
+        globals()["loadVar"].set(0)
+        raise ValueError
+    else:
+        globals()['loadVar'].set(100)
+    x_file.close()
 def pushDataSet():
     url = buildUrlOut()
     auth = b64encode(bytes(usernameVar.get() + ':' + passwordVar.get(), "utf-8")).decode("ascii")
@@ -144,9 +159,13 @@ def pushDataSet():
     response = requests.request("POST", url, headers=headers, json=globals()['dataSet'], verify=False)
     return response
 def saveLocalData():
-    print('EarlyAlphaSimdraftMultiPhase_support.saveLocalData')
-    sys.stdout.flush()
-
+    file = open(localOutPathVar.get(),'w')
+    file.write(json.dumps(dataSet))
+    file.close()
+def loadModule():
+    place = filedialog.askopenfilename(filetypes=("Text File",'*.txt'))
+    if place is not None:
+        modName = importlib.import_modle((place))
 def standardTime():
     globals()['epocCheck'] = False
 

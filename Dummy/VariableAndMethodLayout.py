@@ -1,10 +1,10 @@
-class collectionContainer():
+def collectionContainer():
     """
     This is a container class that contains direct lists of the functions and variables that will be displayed in the GUI
     In order to have a custom class or variable be available, it must be added to these lists.
     This is only a sample, the actual module is operationList
     """
-    SampleCatalogList = [sampleMethodObject()]
+    return [sampleMethodObject()]
 
 
 
@@ -13,6 +13,8 @@ class sampleMethodObject:  # Class object name would go here
         self.name = "Name of the operation/function that will be displayed in the GUI panel to be selected"
         self.attribute = "Name of the attribute that will be taged and labeled to the set of query data"
         self.vars = [sampleVariableObject("Sample", 0)]
+    def getVars(self):
+        return self.vars
     def do(self, globalVarCollection):
         """
         This is where the method's performing operation should be placed.

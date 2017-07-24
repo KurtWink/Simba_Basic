@@ -3,27 +3,15 @@ class sampleVariableObject:  # Class object name would go here
         """
         This is a custom variable, in order to add this variable to the displayed list it must be added to the catalog
         """
-        self.name = name #"Name of variable that will be displayed in the GUI list"
+        self.name = name +": "#"Name of variable that will be displayed in the GUI list"
         self.value = value #"Value as a string that will be user inputted onto the variable in the GUI, and is None until a user defines it"
-
-    def getValue(self):
-        return self.value
-
-    def setValue(self, val):
-        self.value = val
-
-    def getName(self):
-        return self.name
-    def setName(self,name):
-        self.name = name
 
 class varTest:
     def __init__(self):
         self.name = "Var Test"
         self.attribute = ""
-        self.vars = [sampleVariableObject("hello", "yes")]
-    def getVars(self):
-        return self.vars
+        self.vars = [sampleVariableObject("Sample Variable One", "No Value")]
+
     def functionX(self, globalVarCollection):
         jObj = globalVarCollection['dataSet']
         jObj['series'][0]['metrics']['double_value']['doubleValues'] = list(
@@ -35,9 +23,8 @@ class varUpdateTest:
     def __init__(self):
         self.name = "Var Update Test"
         self.attribute = ""
-        self.vars = [sampleVariableObject("new", "yes"), sampleVariableObject('hi', "")]
-    def getVars(self):
-        return self.vars
+        self.vars = [sampleVariableObject("Sample Variable Two", "No Value"), sampleVariableObject('Sample Variable Three', "No Value"), sampleVariableObject("Sample Variable Four","No Value")]
+
     def functionX(self, globalVarCollection):
         jObj = globalVarCollection['dataSet']
         jObj['series'][0]['metrics']['double_value']['doubleValues'] = list(
@@ -53,8 +40,7 @@ class zeroDataFull():
         self.attribute = "Zeroed"
         self.vars = []
 
-    def getVars(self):
-        return self.vars
+
 
     def functionX(self, globalVarCollection):
         jObj = globalVarCollection['dataSet']
