@@ -94,22 +94,31 @@ def clearData():
     sys.stdout.flush()
 
 def getLocalData():
-    x_file = open(localInputPathVar.get())
+    file = filedialog.askopenfile(mode='a')
+    x_file = open(file.name)
 
     globals()['dataSet'] = json.loads(x_file.read())
     if ('error' in globals()['dataSet']) or (globals()['dataSet'] == {}):
         globals()["dataSet"] = None
-        globals()["loadVar"].set(0)
+        globals()["loadBarVar"].set(0)
         raise ValueError
     else:
-        globals()['loadVar'].set(100)
+        globals()['loadBarVar'].set(100)
     x_file.close()
 
 def loadMod():
-    place = filedialog.askopenfilename(filetypes=("Text File", '*.txt'))
+    place = filedialog.askopenfilename(filetypes=[("Python Files", "*.py")])
     if place is not None:
-        globals()['varsAndFunc'] = importlib.import_modle((place))
+        name = place[place.rfind('/'):]
+        name = name[1:]
+        name = name[:len(name)-3]
+        module = importlib.import_module((name))
+        importlib.invalidate_caches()
+        globals()['varsAndFunc'] = getattr(module, 'collectionContainer')
 
+
+def getMod():
+    return globals()['varsAndFunc']
 def openHelp():
     print('Simba_support.openHelp')
     sys.stdout.flush()

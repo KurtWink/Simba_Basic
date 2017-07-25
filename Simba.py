@@ -185,7 +185,7 @@ class Simba:
                 activebackground="#d8d8d8",
                 activeforeground="#000000",
                 background="#d9d9d9",
-                command=Simba_support.loadMod,
+                command=lambda:populateCombo(),
                 font=font9,
                 foreground="#000000",
                 label="Import Module")
@@ -247,7 +247,12 @@ class Simba:
         self.dataOpCombo.place(relx=0.5, rely=0.89, relheight=0.05
                 , relwidth=0.29)
         self.dataOpCombo.configure(textvariable=Simba_support.combobox)
-        self.dataOpCombo.configure(takefocus="")
+        self.dataOpCombo.configure(takefocus="",state="readonly")
+
+        def populateCombo():
+            Simba_support.loadMod()
+            listCol=[x.name for x in (Simba_support.getMod())()]
+            self.dataOpCombo.configure(values=listCol)
 
         self.setVarButton = ttk.Button(self.mainSimbaFrame)
         self.setVarButton.place(relx=0.37, rely=0.89, height=30, width=78)
