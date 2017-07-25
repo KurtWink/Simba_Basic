@@ -40,6 +40,8 @@ def set_Tk_var():
     global varsAndFunc
     global localInputPathVar
     localInputPathVar = StringVar()
+    global editVarVar
+    editVarVar = StringVar()
 
 
     #Vars for HostedService
@@ -79,6 +81,9 @@ def set_Tk_var():
     nameChangeVar = StringVar()
 #Methods for the Main Frame
 
+def getEditVar():
+    return editVarVar.get()
+
 def doSelectedOps(var):
 
     for x in var:
@@ -114,11 +119,15 @@ def loadMod():
         name = name[:len(name)-3]
         module = importlib.import_module((name))
         importlib.invalidate_caches()
-        globals()['varsAndFunc'] = getattr(module, 'collectionContainer')
+        global varsAndFunc
+        varsAndFunc = getattr(module, 'collectionContainer')
+
+def checkVal():
+    print(varsAndFunc()[0].vars[0].value)
 
 
 def getMod():
-    return globals()['varsAndFunc']
+    return varsAndFunc
 def openHelp():
     print('Simba_support.openHelp')
     sys.stdout.flush()

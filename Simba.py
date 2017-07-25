@@ -254,14 +254,65 @@ class Simba:
             listCol=[x.name for x in (Simba_support.getMod())()]
             self.dataOpCombo.configure(values=listCol)
 
+        def onselect(evt):
+            # Note here that Tkinter passes an event object to onselect()
+            self.varListBox.delete(0, END)
+
+            w = evt.widget
+            index = int(w.current())
+            # Populating Varboxes on select
+
+            for n in (Simba_support.getMod())()[index].vars:
+
+                self.varListBox.insert(END, str(n.name) + str(n.value))
+                # value = w.get(index)
+        self.dataOpCombo.bind('<<ComboboxSelected>>', onselect)
+        self.varListBox.configure(exportselection=False)
+        def editVar():
+                #Simba_support.setModVars(0,0)
+
+                #List of MethodObjects
+                func = Simba_support.getMod()()
+                print(func)
+                #List of var objects
+                func2 = func[0].vars
+                print(func2)
+
+                (func[self.dataOpCombo.current()].vars[
+                    self.varListBox.curselection()[0]].value) = Simba_support.editVarVar.get()
+                print(Simba_support.getEditVar())
+                print(func[self.dataOpCombo.current()].vars[
+                          self.varListBox.curselection()[0]].value)
+                Simba_support.checkVal()
+
+
+                """
+                (Simba_support.getMod())()[self.dataOpCombo.current()].vars[
+                    self.varListBox.curselection()[0]].value = Simba_support.editVarVar
+                print(Simba_support.getEditVar())
+                print((Simba_support.getMod())()[self.dataOpCombo.current()].vars[
+                    self.varListBox.curselection()[0]].value)
+                """
+                self.varListBox.delete(0, END)
+
+
+                for n in func[self.dataOpCombo.current()].vars:
+                    print(n.name)
+                    self.varListBox.insert(END, str(n.name) + str(n.value))
+
+
+
+
+
         self.setVarButton = ttk.Button(self.mainSimbaFrame)
         self.setVarButton.place(relx=0.37, rely=0.89, height=30, width=78)
         self.setVarButton.configure(takefocus="")
         self.setVarButton.configure(text='''Set''')
+        self.setVarButton.configure(command=lambda:editVar())
 
         self.setVarEnt = ttk.Entry(self.mainSimbaFrame)
         self.setVarEnt.place(relx=0.03, rely=0.89, relheight=0.05, relwidth=0.32)
-
+        self.setVarEnt.configure(textvariable=Simba_support.editVarVar)
         self.setVarEnt.configure(takefocus="")
         self.setVarEnt.configure(cursor="ibeam")
 

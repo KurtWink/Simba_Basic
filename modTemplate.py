@@ -4,7 +4,9 @@ def collectionContainer(): # This name cannot be changed
     In order to have a custom class or variable be available, it must be added to these lists.
     This is only a sample
     """
-    return [sampleMethodObject()]
+    global opsSet
+    opsSet = [sampleMethodObject(), sampleMethodObject()]
+    return opsSet
 
 
 
@@ -12,7 +14,7 @@ class sampleMethodObject:  # Class object name would go here
     def __init__(self):
         self.name = "Name of the operation/function that will be displayed in the GUI panel to be selected"
         self.attribute = "Name of the attribute that will be taged and labeled to the set of query data"
-        self.vars = [sampleVariableObject("Sample", 0)]
+        self.vars = [sampleVariableObject("Sample", "Value"), sampleVariableObject("Sample2", "Value")]
     def getVars(self):
         return self.vars
     def do(self, jQuery):
