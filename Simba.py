@@ -251,7 +251,7 @@ class Simba:
 
         def populateCombo():
             Simba_support.loadMod()
-            listCol=[x.name for x in (Simba_support.getMod())()]
+            listCol=[x.name for x in (Simba_support.getMod())]
             self.dataOpCombo.configure(values=listCol)
 
         def onselect(evt):
@@ -262,7 +262,7 @@ class Simba:
             index = int(w.current())
             # Populating Varboxes on select
 
-            for n in (Simba_support.getMod())()[index].vars:
+            for n in (Simba_support.getMod())[index].vars:
 
                 self.varListBox.insert(END, str(n.name) + str(n.value))
                 # value = w.get(index)
@@ -272,7 +272,7 @@ class Simba:
                 #Simba_support.setModVars(0,0)
 
                 #List of MethodObjects
-                func = Simba_support.getMod()()
+                func = Simba_support.getMod()
                 print(func)
                 #List of var objects
                 func2 = func[0].vars
