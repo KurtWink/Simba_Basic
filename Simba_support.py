@@ -32,16 +32,19 @@ def set_Tk_var():
     global loadBarVar
     loadBarVar = IntVar()
     loadBarVar.set(0)
-    global epocCheck
+
     global dataSet
     dataSet = None
-    epocCheck = None
+
     global operationSet
     global varsAndFunc
     global localInputPathVar
     localInputPathVar = StringVar()
     global editVarVar
     editVarVar = StringVar()
+    #Strange GUI triggers
+    global enableLoadVar
+    enableLoadVar = False
 
 
     #Vars for HostedService
@@ -95,8 +98,9 @@ def doSelectedOps(var):
                                  "There is no data set loaded or an invalid range of values have been selected\nPlease review your dataset options")
 
 def clearData():
-    print('Simba_support.clearData')
-    sys.stdout.flush()
+    globals()["dataSet"] = None
+    globals()['enableLoadVar'] = False
+    globals()["loadBarVar"].set(0)
 
 def getLocalData():
     file = filedialog.askopenfile(mode='a')
@@ -109,6 +113,7 @@ def getLocalData():
         raise ValueError
     else:
         globals()['loadBarVar'].set(100)
+        globals()['enableLoadVar'] = True
     x_file.close()
 
 def loadMod():
@@ -121,10 +126,6 @@ def loadMod():
         importlib.invalidate_caches()
         global varsAndFunc
         varsAndFunc = getattr(module, 'collectionContainer')()
-
-def checkVal():
-    print(varsAndFunc[0].vars[0].value)
-
 
 def getMod():
     return varsAndFunc
@@ -154,20 +155,25 @@ def init(top, gui, *args, **kwargs):
     root = top
 #Methods for  Hosted Service
 def buildURL():
-    return "https://in2lytics.gridstate.io/api/" + projectInputVar.get() + "/series/" + seriesInputVar.get() + "/data"
+    print(projectInputVar.get())
+    return "https://in2lytics.gridstate.io/api/" + globals()['projectInputVar'].get() + "/series/" + seriesInputVar.get() + "/data"
+
 def getJsonSet(auth, url):
 
-    if epocCheck is None:
+    if (useStdVar.get() == 0 and useEpoVar.get()==0):
         raise ValueError()
-    if epocCheck:
-        startEpoch = globals()['startTimeEpoVar'].get()
-        endEpoch = globals()['endingTimeEpoVar'].get()
+    if useEpoVar.get()==0:
+        startEpoch = globals()['epoStartVar'].get()
+        endEpoch = globals()['epoEndVar'].get()
     else:
-        pattern = '%d.%m.%Y %H:%M:%S'
-        startEpoch = int(
-            time.mktime(time.strptime(globals()['startingTimeStdVar'].get(), pattern))) * 1000
-        endEpoch = int(
-            time.mktime(time.strptime(globals()['endingTimeStdVar'].get(), pattern))) * 1000
+        try:
+            pattern = '%d.%m.%Y %H:%M:%S'
+            startEpoch = int(
+                time.mktime(time.strptime(globals()['stdStartVar'].get(), pattern))) * 1000
+            endEpoch = int(
+                time.mktime(time.strptime(globals()['stdEndVar'].get(), pattern))) * 1000
+        except:
+            raise ValueError()
 
     querystring = {"start_time": ""+str(startEpoch), "end_time": ""+str(endEpoch)}
     print(querystring)
