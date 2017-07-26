@@ -269,33 +269,15 @@ class Simba:
         self.dataOpCombo.bind('<<ComboboxSelected>>', onselect)
         self.varListBox.configure(exportselection=False)
         def editVar():
-                #Simba_support.setModVars(0,0)
-
                 #List of MethodObjects
                 func = Simba_support.getMod()
-                print(func)
-                #List of var objects
-                func2 = func[0].vars
-                print(func2)
-
                 (func[self.dataOpCombo.current()].vars[
                     self.varListBox.curselection()[0]].value) = Simba_support.editVarVar.get()
                 print(Simba_support.getEditVar())
                 print(func[self.dataOpCombo.current()].vars[
                           self.varListBox.curselection()[0]].value)
                 Simba_support.checkVal()
-
-
-                """
-                (Simba_support.getMod())()[self.dataOpCombo.current()].vars[
-                    self.varListBox.curselection()[0]].value = Simba_support.editVarVar
-                print(Simba_support.getEditVar())
-                print((Simba_support.getMod())()[self.dataOpCombo.current()].vars[
-                    self.varListBox.curselection()[0]].value)
-                """
-                self.varListBox.delete(0, END)
-
-
+                self.varListBox.delete(0, END)  
                 for n in func[self.dataOpCombo.current()].vars:
                     print(n.name)
                     self.varListBox.insert(END, str(n.name) + str(n.value))

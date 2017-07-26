@@ -120,10 +120,10 @@ def loadMod():
         module = importlib.import_module((name))
         importlib.invalidate_caches()
         global varsAndFunc
-        varsAndFunc = getattr(module, 'collectionContainer')
+        varsAndFunc = getattr(module, 'collectionContainer')()
 
 def checkVal():
-    print(varsAndFunc()[0].vars[0].value)
+    print(varsAndFunc[0].vars[0].value)
 
 
 def getMod():
