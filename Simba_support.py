@@ -60,10 +60,8 @@ def set_Tk_var():
     stdEndVar = StringVar()
     global epoEndVar
     epoEndVar = StringVar()
-    global useStdVar
-    useStdVar = StringVar()
-    global useEpoVar
-    useEpoVar = StringVar()
+    global epoCheck
+    epoCheck= None
     global usernameInputVar
     usernameInputVar = StringVar()
     global passwordInputVar
@@ -154,15 +152,19 @@ def init(top, gui, *args, **kwargs):
     top_level = top
     root = top
 #Methods for  Hosted Service
+def epochTime():
+    globals()['epocCheck'] = True
+def standardTime():
+    globals()['epocCheck'] = False
 def buildURL():
     print(projectInputVar.get())
     return "https://in2lytics.gridstate.io/api/" + globals()['projectInputVar'].get() + "/series/" + seriesInputVar.get() + "/data"
 
 def getJsonSet(auth, url):
 
-    if (useStdVar.get() == 0 and useEpoVar.get()==0):
+    if (epoCheck is None):
         raise ValueError()
-    if useEpoVar.get()==0:
+    if epoCheck:
         startEpoch = globals()['epoStartVar'].get()
         endEpoch = globals()['epoEndVar'].get()
     else:

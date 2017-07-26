@@ -105,7 +105,6 @@ class Simba:
 
 
 
-
         self.menubar = Menu(top,font=font9,bg=_bgcolor,fg=_fgcolor)
         top.configure(menu = self.menubar)
 
@@ -141,10 +140,25 @@ class Simba:
                 activebackground="#d8d8d8",
                 activeforeground="#000000",
                 background="#d9d9d9",
-                command=lambda: [Simba_support.getLocalData(),enableOnLoad()],
+                command=lambda: [warningGetLocal(),enableOnLoad()],
                 font=font9,
                 foreground="#000000",
                 label="Local File")
+        def warningGetLocal():
+            try:
+                Simba_support.getLocalData()
+                updateTags()
+            except ValueError:
+                from tkinter import messagebox
+                messagebox.showerror("Error", "No data set was loaded, please review your directories and/or credentials")
+            except AttributeError:
+                pass
+        def updateTags():
+            self.tagListBox2.delete(0, END)
+            if not (('error' in Simba_support.dataSet) or (
+                Simba_support.dataSet == {})):
+                for key, value in Simba_support.dataSet['series'][0]['tags'].items():
+                    self.tagListBox2.insert(END, key + " : " + value)
         self.open_from.add_command(
                 activebackground="#d8d8d8",
                 activeforeground="#000000",
@@ -358,12 +372,12 @@ class Simba:
                 self.selectLabFrame.configure(text='''Input Project Selector''')
                 self.selectLabFrame.configure(width=210)
 
-                self.projectOutputEnt = ttk.Entry(self.selectLabFrame)
-                self.projectOutputEnt.place(relx=0.05, rely=0.27, relheight=0.12
+                self.projectInputEnt = ttk.Entry(self.selectLabFrame)
+                self.projectInputEnt.place(relx=0.05, rely=0.27, relheight=0.12
                                             , relwidth=0.79)
-                self.projectOutputEnt.configure(textvariable=Simba_support.projectInputVar)
-                self.projectOutputEnt.configure(takefocus="")
-                self.projectOutputEnt.configure(cursor="ibeam")
+                self.projectInputEnt.configure(textvariable=Simba_support.projectInputVar)
+                self.projectInputEnt.configure(takefocus="")
+                self.projectInputEnt.configure(cursor="ibeam")
 
                 self.seriesInputEnt = ttk.Entry(self.selectLabFrame)
                 self.seriesInputEnt.place(relx=0.05, rely=0.62, relheight=0.12
@@ -393,6 +407,8 @@ class Simba:
                 self.buildURLButton.configure(text='''Create URL''')
 
                 def setEnt():
+                    Simba_support.projectInputVar.set(self.projectInputEnt.get())
+                    Simba_support.seriesInputVar.set(self.seriesInputEnt.get())
                     Simba_support.urlInputVar.set(Simba_support.buildURL())
                     self.urlEnt.insert(END, Simba_support.buildURL())
 
@@ -452,23 +468,34 @@ class Simba:
                 self.epochLab.configure(relief=FLAT)
                 self.epochLab.configure(text='''(Epoch Time)''')
 
-                self.style.map('TCheckbutton', background=
-                [('selected', _bgcolor), ('active', "_ana2color")])
-                self.useStdCheck = ttk.Checkbutton(self.timeLabFrame)
-                self.useStdCheck.place(relx=0.08, rely=0.8, relwidth=0.32, relheight=0.0
+                self.timeButton1 = ttk.Button(self.timeLabFrame)
+                self.timeButton1.place(relx=0.08, rely=0.8, relwidth=0.32, relheight=0.0
                                        , height=26)
-                self.useStdCheck.configure(variable=Simba_support.useStdVar)
-                self.useStdCheck.configure(takefocus="")
-                self.useStdCheck.configure(text='''Use Standard''')
-                self.useStdCheck.configure(width=121)
+                self.timeButton1.configure(command=lambda: activeStandard())
+                self.timeButton1.configure(takefocus="")
+                self.timeButton1.configure(text='''Use Standard''')
 
-                self.useEpoCheck = ttk.Checkbutton(self.timeLabFrame)
-                self.useEpoCheck.place(relx=0.55, rely=0.8, relwidth=0.27, relheight=0.0
+                self.epochButton1 = ttk.Button(self.projectselFrame1)
+                self.epochButton1.place(relx=0.55, rely=0.8, relwidth=0.27, relheight=0.0
                                        , height=26)
-                self.useEpoCheck.configure(variable=Simba_support.useEpoVar)
-                self.useEpoCheck.configure(takefocus="")
-                self.useEpoCheck.configure(text='''Use Epoch''')
-                self.useEpoCheck.configure(width=102)
+                self.epochButton1.configure(command=lambda: activeEpo())
+                self.epochButton1.configure(takefocus="")
+                self.epochButton1.configure(text='''Use Epoch''')
+
+                def activeEpo():
+                    self.endingTimeEpoEnt.configure(state=NORMAL)
+                    self.startingTimeEpoEnt.configure(state=NORMAL)
+                    self.startingTimeStdEnt.configure(state=DISABLED)
+                    self.endingTimeStdEnt.configure(state=DISABLED)
+                    Simba_support.epochTime()
+
+                def activeStandard():
+                    self.endingTimeEpoEnt.configure(state=DISABLED)
+                    self.startingTimeEpoEnt.configure(state=DISABLED)
+                    self.startingTimeStdEnt.configure(state=NORMAL)
+                    self.endingTimeStdEnt.configure(state=NORMAL)
+                    Simba_support.standardTime()
+
 
                 self.accessLabFrame = ttk.Labelframe(top)
                 self.accessLabFrame.place(relx=0.36, rely=0.48, relheight=0.3
@@ -519,9 +546,28 @@ class Simba:
 
                 self.getDataButton = ttk.Button(self.accessLabFrame)
                 self.getDataButton.place(relx=0.68, rely=0.76, height=30, width=98)
-                self.getDataButton.configure(command=lambda:[Simba_support.getData(), enableOnLoad()])
+                self.getDataButton.configure(command=lambda:[warningGetData(), enableOnLoad()])
                 self.getDataButton.configure(takefocus="")
                 self.getDataButton.configure(text='''Get Data''')
+                #Due To Broken Complile time bindings from making a new window
+                def warningGetData():
+                    try:
+                        print(self.useStd.get())
+                        Simba_support.usernameInputVar.set(self.usernameEnt.get())
+                        Simba_support.passwordInputVar.set(self.passwordEnt.get())
+                        Simba_support.epoStartVar.set(self.startingTimeEpoEnt.get())
+                        Simba_support.epoEndVar.set(self.endingTimeEpoEnt.get())
+                        Simba_support.stdStartVar.set(self.startingTimeStdEnt.get())
+                        Simba_support.stdEndVar.set(self.endingTimeStdEnt.get())
+                        Simba_support.useEpoVar.set(self.useEpo.get())
+                        Simba_support.useStdVar.set(self.useStd.get())
+                        Simba_support.getData()
+                        updateTags()
+                    except ValueError:
+                        from tkinter import messagebox
+                        messagebox.showerror("Error",
+                                             "No data set was loaded, please review your directories and credentials")
+
 
         # Class for Export
         class Export:
