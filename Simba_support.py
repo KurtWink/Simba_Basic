@@ -5,8 +5,6 @@
 #    Jul 24, 2017 07:59:36 AM
 
 
-import sys
-
 try:
     from Tkinter import *
 except ImportError:
@@ -14,17 +12,22 @@ except ImportError:
 
 try:
     import ttk
+
     py3 = 0
 except ImportError:
     import tkinter.ttk as ttk
+
     py3 = 1
+import importlib
+import json
+import time
 from base64 import b64encode
 from tkinter import filedialog
 from tkinter import messagebox
-import json
+
 import requests
-import time
-import importlib
+
+
 def set_Tk_var():
     # Vars for Main Frsmr
     global combobox
@@ -42,12 +45,11 @@ def set_Tk_var():
     localInputPathVar = StringVar()
     global editVarVar
     editVarVar = StringVar()
-    #Strange GUI triggers
+    # Strange GUI triggers
     global enableLoadVar
     enableLoadVar = False
 
-
-    #Vars for HostedService
+    # Vars for HostedService
     global projectInputVar
     projectInputVar = StringVar()
     global seriesInputVar
@@ -61,7 +63,7 @@ def set_Tk_var():
     global epoEndVar
     epoEndVar = StringVar()
     global epoCheck
-    epoCheck= None
+    epoCheck = None
     global usernameInputVar
     usernameInputVar = StringVar()
     global passwordInputVar
@@ -69,7 +71,7 @@ def set_Tk_var():
     global urlInputVar
     urlInputVar = StringVar()
 
-    #Vars for Export Frame
+    # Vars for Export Frame
     global usernameOutVar
     usernameOutVar = StringVar()
     global passwordOutVar
@@ -80,13 +82,15 @@ def set_Tk_var():
     urlOutVar = StringVar()
     global nameChangeVar
     nameChangeVar = StringVar()
-#Methods for the Main Frame
+
+
+# Methods for the Main Frame
 
 def getEditVar():
     return editVarVar.get()
 
-def doSelectedOps(var):
 
+def doSelectedOps(var):
     for x in var:
         try:
             globals()['varsAndFunc'][x].functionX(globals())
@@ -95,10 +99,12 @@ def doSelectedOps(var):
             messagebox.showerror("Error",
                                  "There is no data set loaded or an invalid range of values have been selected\nPlease review your dataset options")
 
+
 def clearData():
     globals()["dataSet"] = None
     globals()['enableLoadVar'] = False
     globals()["loadBarVar"].set(0)
+
 
 def getLocalData():
     file = filedialog.askopenfile(mode='a')
@@ -114,29 +120,41 @@ def getLocalData():
         globals()['enableLoadVar'] = True
     x_file.close()
 
+
 def loadMod():
     place = filedialog.askopenfilename(filetypes=[("Python Files", "*.py")])
     if place is not None:
         name = place[place.rfind('/'):]
         name = name[1:]
-        name = name[:len(name)-3]
+        name = name[:len(name) - 3]
         module = importlib.import_module((name))
         importlib.invalidate_caches()
         global varsAndFunc
         varsAndFunc = getattr(module, 'collectionContainer')()
 
+
 def getMod():
     return varsAndFunc
+
+
 def openHelp():
     print('Simba_support.openHelp')
     sys.stdout.flush()
 
+
 def saveLocalData():
-    print('Simba_support.saveLocalData')
-    sys.stdout.flush()
-#Methods for Export
+    try:
+        file = open(filedialog.asksaveasfilename(filetypes=[("Text Files", "*.txt")]), 'w')
+        file.write(json.dumps(dataSet))
+        file.close()
+    except:
+        pass
+
+
+# Methods for Export
 def buildUrlOut():
     return "https://in2lytics.gridstate.io/api/" + projectOutVar.get() + "/series/"
+
 
 def pushDataSet():
     url = buildUrlOut()
@@ -146,22 +164,31 @@ def pushDataSet():
     headers = {'Authorization': 'Basic %s' % auth}
     response = requests.request("POST", url, headers=headers, json=globals()['dataSet'], verify=False)
     return response
+
+
 def init(top, gui, *args, **kwargs):
     global w, top_level, root
     w = gui
     top_level = top
     root = top
-#Methods for  Hosted Service
+
+
+# Methods for  Hosted Service
 def epochTime():
-    globals()['epocCheck'] = True
+    globals()['epoCheck'] = True
+
+
 def standardTime():
-    globals()['epocCheck'] = False
+    globals()['epoCheck'] = False
+
+
 def buildURL():
     print(projectInputVar.get())
-    return "https://in2lytics.gridstate.io/api/" + globals()['projectInputVar'].get() + "/series/" + seriesInputVar.get() + "/data"
+    return "https://in2lytics.gridstate.io/api/" + globals()[
+        'projectInputVar'].get() + "/series/" + seriesInputVar.get() + "/data"
+
 
 def getJsonSet(auth, url):
-
     if (epoCheck is None):
         raise ValueError()
     if epoCheck:
@@ -177,24 +204,31 @@ def getJsonSet(auth, url):
         except:
             raise ValueError()
 
-    querystring = {"start_time": ""+str(startEpoch), "end_time": ""+str(endEpoch)}
+    querystring = {"start_time": "" + str(startEpoch), "end_time": "" + str(endEpoch)}
     print(querystring)
     headers = {'Authorization': 'Basic %s' % auth}
-
+    print(passwordInputVar.get())
+    print(usernameInputVar.get())
     response = requests.request("GET", url, headers=headers, params=querystring, verify=False)
 
     return json.loads(response.text)
+
+
 def getData():
     url = urlInputVar.get()
+    print("Get Data URL:   ")
+    print(url)
     userAndPass = b64encode(bytes(usernameInputVar.get() + ':' + passwordInputVar.get(), "utf-8")).decode("ascii")
     globals()['dataSet'] = getJsonSet(userAndPass, url)
     print(globals()['dataSet'])
     if ('error' in globals()['dataSet']) or (globals()['dataSet'] == {}):
         globals()["dataSet"] = None
-        globals()["loadVar"].set(0)
+        globals()["loadBarVar"].set(0)
         raise ValueError
     else:
-        globals()['loadVar'].set(100)
+        globals()['loadBarVar'].set(100)
+
+
 def destroy_window():
     # Function which closes the window.
     global top_level
@@ -204,6 +238,5 @@ def destroy_window():
 
 if __name__ == '__main__':
     import Simba
+
     Simba.vp_start_gui()
-
-
