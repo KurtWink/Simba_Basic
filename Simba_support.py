@@ -21,6 +21,7 @@ except ImportError:
 import importlib
 import json
 import time
+from tkinter import simpledialog
 from base64 import b64encode
 from tkinter import filedialog
 from tkinter import messagebox
@@ -91,10 +92,11 @@ def getEditVar():
 
 
 def doSelectedOps(var):
-    for x in var:
+
         try:
-            globals()['varsAndFunc'][x].functionX(globals())
-            globals()['dataSet']['series'][0]['tags'][globals()['varsAndFunc'][x].name] = "1"
+            globals()['varsAndFunc'][var].do(globals()['dataSet'])
+            val = simpledialog.askstring("Addtional Tag Value:", "Please Provide An Tag Value")
+            globals()['dataSet']['series'][0]['tags'][globals()['varsAndFunc'][var].attribute] = val
         except ValueError:
             messagebox.showerror("Error",
                                  "There is no data set loaded or an invalid range of values have been selected\nPlease review your dataset options")

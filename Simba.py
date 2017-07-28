@@ -290,7 +290,7 @@ class Simba:
             # Populating Varboxes on select
 
             for n in (Simba_support.getMod())[index].vars:
-                self.varListBox.insert(END, str(n.name) + str(n.value))
+                self.varListBox.insert(END, str(n.name) +" : "+ str(n.value))
                 # value = w.get(index)
 
         self.dataOpCombo.bind('<<ComboboxSelected>>', onselect)
@@ -304,11 +304,11 @@ class Simba:
             print(Simba_support.getEditVar())
             print(func[self.dataOpCombo.current()].vars[
                       self.varListBox.curselection()[0]].value)
-            Simba_support.checkVal()
+
             self.varListBox.delete(0, END)
             for n in func[self.dataOpCombo.current()].vars:
                 print(n.name)
-                self.varListBox.insert(END, str(n.name) + str(n.value))
+                self.varListBox.insert(END, str(n.name) + " : " + str(n.value))
 
         self.setVarButton = ttk.Button(self.mainSimbaFrame)
         self.setVarButton.place(relx=0.355, rely=0.89, height=30, width=78)
@@ -326,6 +326,9 @@ class Simba:
         self.dataOpButton.place(relx=0.84, rely=0.89, height=30, width=78)
         self.dataOpButton.configure(takefocus="")
         self.dataOpButton.configure(text='''Apply''')
+        self.dataOpButton.configure(command= lambda: [
+                Simba_support.doSelectedOps(self.dataOpCombo.current()),
+                updateTags()])
 
         self.varListLab = ttk.Label(self.mainSimbaFrame)
         self.varListLab.place(relx=0.17, rely=0.02, height=24, width=85)
