@@ -26,11 +26,17 @@ from base64 import b64encode
 from tkinter import filedialog
 from tkinter import messagebox
 
+
+
 import requests
 
 
 def set_Tk_var():
     # Vars for Main Frsmr
+
+
+
+
     global combobox
     combobox = StringVar()
     global loadBarVar
@@ -92,14 +98,22 @@ def getEditVar():
 
 
 def doSelectedOps(var):
+    '''
+    Function takes the currently selected method object and does their corrosponding function
+    Label is then applied to the dataset and is asked to be named by a simple prompt
+    Any additional exception handling for future custom functions should be added here. The value error is a broad catch
+    :param var: The currently Selected Method Object
+    :return:
+    '''
 
-        try:
-            globals()['varsAndFunc'][var].do(globals()['dataSet'])
-            val = simpledialog.askstring("Addtional Tag Value:", "Please Provide An Tag Value")
-            globals()['dataSet']['series'][0]['tags'][globals()['varsAndFunc'][var].attribute] = val
-        except ValueError:
-            messagebox.showerror("Error",
-                                 "There is no data set loaded or an invalid range of values have been selected\nPlease review your dataset options")
+
+    try:
+        globals()['varsAndFunc'][var].do(globals()['dataSet'])
+        val = simpledialog.askstring("Addtional Tag Value:", "Please Provide An Tag Value")
+        globals()['dataSet']['series'][0]['tags'][globals()['varsAndFunc'][var].attribute] = val
+    except ValueError:
+        messagebox.showerror("Error",
+                             "There is no data set loaded or an invalid input of variables have been made\nPlease review your dataset options")
 
 
 def clearData():
@@ -124,6 +138,11 @@ def getLocalData():
 
 
 def loadMod():
+    '''
+    Function asks for a file location name. Due to the module imports, the file must be in the same directory as the
+    Simba files
+    :return:
+    '''
     place = filedialog.askopenfilename(filetypes=[("Python Files", "*.py")])
     if place is not None:
         name = place[place.rfind('/'):]
@@ -140,11 +159,15 @@ def getMod():
 
 
 def openHelp():
-    print('Simba_support.openHelp')
-    sys.stdout.flush()
+    pass
 
 
 def saveLocalData():
+    '''
+    Writes the currently held jQuery Set to the file locaton through a dialog prompt
+    Lazy Exception handling due to most serious File I/O execeptions being handled by the native dialog
+    :return:
+    '''
     try:
         file = open(filedialog.asksaveasfilename(filetypes=[("Text Files", "*.txt")]), 'w')
         file.write(json.dumps(dataSet))
@@ -154,12 +177,23 @@ def saveLocalData():
 
 
 # Methods for Export
+
 def buildUrlOut():
+    '''
+    Builds the native gridstate.io output url from the output directory entry in the GUI
+    :return: String (url value)
+    '''
     return "https://in2lytics.gridstate.io/api/" + projectOutVar.get() + "/series/"
 
 
 def pushDataSet():
-    url = buildUrlOut()
+    '''
+    Function sends a http get request to push data onto a hosated service
+    The auth is implied to be basic/simple username and password
+    If a name change is used, then the data will be placed in a new series under that name (assuming the restAPI works)
+    :return:
+    '''
+    url = urlOutVar.get()
     auth = b64encode(bytes(usernameOutVar.get() + ':' + passwordOutVar.get(), "utf-8")).decode("ascii")
     if not (nameChangeVar.get() == "" or nameChangeVar.get() is None):
         dataSet['series'][0]['tags']['file-name'] = nameChangeVar.get()
@@ -177,20 +211,37 @@ def init(top, gui, *args, **kwargs):
 
 # Methods for  Hosted Service
 def epochTime():
+    '''
+    Sets a timecheck variable for when epoch time is being used (These both don't really need to be methods)
+    :return:
+    '''
     globals()['epoCheck'] = True
 
 
 def standardTime():
+    '''
+    Sets a timecheck variable for when standard time is being used
+    :return:
+    '''
     globals()['epoCheck'] = False
 
 
 def buildURL():
-    print(projectInputVar.get())
-    return "https://in2lytics.gridstate.io/api/" + globals()[
-        'projectInputVar'].get() + "/series/" + seriesInputVar.get() + "/data"
+    '''
+    Builds native gridstate url from GUI project and series entries
+    :return: String (url Value)
+    '''
+    return "https://in2lytics.gridstate.io/api/" + projectInputVar.get() + "/series/" + seriesInputVar.get() + "/data"
 
 
 def getJsonSet(auth, url):
+    '''
+    Function handles timequery and http requests
+    Currently looking need streaming, secure requests
+    :param auth: String (The simple auth provided by encoded info (should expand later))
+    :param url: String
+    :return:
+    '''
     if (epoCheck is None):
         raise ValueError()
     if epoCheck:
@@ -207,22 +258,22 @@ def getJsonSet(auth, url):
             raise ValueError()
 
     querystring = {"start_time": "" + str(startEpoch), "end_time": "" + str(endEpoch)}
-    print(querystring)
     headers = {'Authorization': 'Basic %s' % auth}
-    print(passwordInputVar.get())
-    print(usernameInputVar.get())
     response = requests.request("GET", url, headers=headers, params=querystring, verify=False)
 
     return json.loads(response.text)
 
 
 def getData():
+    '''
+    Loads and assigns jQuery from simple username and password auth to a variable.
+    Raises Value errors on failing to load data, should be handled accordingly
+    Visually sets the loadbar graphic in the GUI if the data is received correctly
+    :return:
+    '''
     url = urlInputVar.get()
-    print("Get Data URL:   ")
-    print(url)
     userAndPass = b64encode(bytes(usernameInputVar.get() + ':' + passwordInputVar.get(), "utf-8")).decode("ascii")
     globals()['dataSet'] = getJsonSet(userAndPass, url)
-    print(globals()['dataSet'])
     if ('error' in globals()['dataSet']) or (globals()['dataSet'] == {}):
         globals()["dataSet"] = None
         globals()["loadBarVar"].set(0)

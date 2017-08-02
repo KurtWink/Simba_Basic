@@ -277,9 +277,13 @@ class Simba:
         self.dataOpCombo.configure(takefocus="", state="readonly")
 
         def populateCombo():
-            Simba_support.loadMod()
-            listCol = [x.name for x in (Simba_support.getMod())]
-            self.dataOpCombo.configure(values=listCol)
+            try:
+                Simba_support.loadMod()
+                listCol = [x.name for x in (Simba_support.getMod())]
+                self.dataOpCombo.configure(values=listCol)
+            except:
+                pass
+
 
         def onselect(evt):
             # Note here that Tkinter passes an event object to onselect()
@@ -301,13 +305,12 @@ class Simba:
             func = Simba_support.getMod()
             (func[self.dataOpCombo.current()].vars[
                  self.varListBox.curselection()[0]].value) = Simba_support.editVarVar.get()
-            print(Simba_support.getEditVar())
-            print(func[self.dataOpCombo.current()].vars[
-                      self.varListBox.curselection()[0]].value)
+
+
 
             self.varListBox.delete(0, END)
             for n in func[self.dataOpCombo.current()].vars:
-                print(n.name)
+
                 self.varListBox.insert(END, str(n.name) + " : " + str(n.value))
 
         self.setVarButton = ttk.Button(self.mainSimbaFrame)
@@ -672,7 +675,7 @@ class Simba:
                 self.buildUrlOutButton = ttk.Button(self.urlOutLabFrame)
                 self.buildUrlOutButton.place(relx=0.57, rely=0.32, height=30, width=98)
                 self.buildUrlOutButton.configure(
-                    command=lambda: [Simba_support.urlOutVar.set(self.urlOutEnt.get()), Simba_support.buildUrlOut])
+                    command=lambda: [Simba_support.projectOutVar.set(self.projectOutEnt.get()), Simba_support.urlOutVar.set(Simba_support.buildUrlOut()), self.urlOutEnt.delete(0,END),self.urlOutEnt.insert(END,Simba_support.urlOutVar.get())])
                 self.buildUrlOutButton.configure(takefocus="")
                 self.buildUrlOutButton.configure(text='''Build Url''')
 
@@ -685,7 +688,7 @@ class Simba:
 
                 self.pushDataButton = ttk.Button(self.urlOutLabFrame)
                 self.pushDataButton.place(relx=0.77, rely=0.76, height=30, width=58)
-                self.pushDataButton.configure(command=lambda: setPushDataSet())
+                self.pushDataButton.configure(command=lambda:  setPushDataSet())
                 self.pushDataButton.configure(takefocus="")
                 self.pushDataButton.configure(text='''Export''')
 
