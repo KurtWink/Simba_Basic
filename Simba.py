@@ -255,7 +255,7 @@ class Simba:
         self.mainSimbaFrame.configure(relief=GROOVE)
         self.mainSimbaFrame.configure(width=705)
         self.mainSimbaFrame.configure(takefocus="0")
-
+        #The listbox for variables from a selected mod operation
         self.varListBox = tagListBox(self.mainSimbaFrame)
         self.varListBox.place(relx=0.01, rely=0.08, relheight=0.81
                               , relwidth=0.46)
@@ -269,7 +269,7 @@ class Simba:
         self.varListBox.configure(selectforeground="black")
         self.varListBox.configure(takefocus="0")
         self.varListBox.configure(width=10)
-
+        #Tag listbox that will populate with tags of current dataset
         self.tagListBox2 = tagListBox(self.mainSimbaFrame)
         self.tagListBox2.place(relx=0.5, rely=0.08, relheight=0.81
                                , relwidth=0.46)
@@ -283,7 +283,7 @@ class Simba:
         self.tagListBox2.configure(selectforeground="black")
         self.tagListBox2.configure(takefocus="0")
         self.tagListBox2.configure(width=10)
-
+        # Combobox that mod operations will be loaded into
         self.dataOpCombo = ttk.Combobox(self.mainSimbaFrame)
         self.dataOpCombo.place(relx=0.5, rely=0.89, relheight=0.05
                                , relwidth=0.32)

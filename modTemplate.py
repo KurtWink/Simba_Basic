@@ -4,9 +4,7 @@ def collectionContainer(): # This name cannot be changed
     In order to have a custom class or variable be available, it must be added to these lists.
     This is only a sample
     """
-    global opsSet
-    opsSet = [sampleMethodObject(), sampleMethodObject()]
-    return opsSet
+    return [sampleMethodObject(), sampleMethodObject()]
 
 
 
@@ -14,7 +12,6 @@ class sampleMethodObject:  # Class object name would go here
     def __init__(self):
         self.name = "Name of the operation/function that will be displayed in the GUI panel to be selected"
         self.attribute = "Name of the attribute that will be tagged and labeled to the set of query data"
-
         self.vars = [sampleVariableObject("Attribute Note", "Value"), sampleVariableObject("Sample 2", "Value")]
     def do(self, jQuery):
         """
@@ -28,7 +25,6 @@ class sampleMethodObject:  # Class object name would go here
         Once a custom methodObject class is made, in order to add it to the list of displayed operations,
         the entire class object will need to be placed in 'collectionContainer'
         """
-        print(self.vars[0].value)
 
 
 class sampleVariableObject:  # Class object name would go here
