@@ -351,6 +351,8 @@ class Simba:
         self.setVarEnt.configure(takefocus="")
         self.setVarEnt.configure(cursor="ibeam")
 
+
+        #Apply button that should do selected operations and update any tags applied to the data set
         self.dataOpButton = ttk.Button(self.mainSimbaFrame)
         self.dataOpButton.place(relx=0.84, rely=0.89, height=30, width=78)
         self.dataOpButton.configure(takefocus="")
@@ -375,6 +377,7 @@ class Simba:
         self.tagsListLab.configure(takefocus="0")
         self.tagsListLab.configure(text='''Data Tags''')
 
+        #Loadbar to show when a dataset is correctly loaded
         self.loadBar = ttk.Progressbar(self.mainSimbaFrame)
         self.loadBar.place(relx=0.01, rely=0.02, relwidth=0.07, relheight=0.0
                            , height=22)
@@ -448,6 +451,7 @@ class Simba:
                 self.buildURLButton.configure(takefocus="")
                 self.buildURLButton.configure(text='''Create URL''')
 
+                #Sets values due to compile time binding failing
                 def setEnt():
                     Simba_support.projectInputVar.set(self.projectInputEnt.get())
                     Simba_support.seriesInputVar.set(self.seriesInputEnt.get())
@@ -466,6 +470,7 @@ class Simba:
                 self.startingTimeStdEnt.configure(textvariable=Simba_support.stdStartVar)
                 self.startingTimeStdEnt.configure(takefocus="")
                 self.startingTimeStdEnt.configure(cursor="ibeam")
+                self.startingTimeStdEnt.configure(state=DISABLED)
 
                 self.startingTimeEpoEnt = ttk.Entry(self.timeLabFrame)
                 self.startingTimeEpoEnt.place(relx=0.5, rely=0.36, relheight=0.12
@@ -473,6 +478,7 @@ class Simba:
                 self.startingTimeEpoEnt.configure(textvariable=Simba_support.epoStartVar)
                 self.startingTimeEpoEnt.configure(takefocus="")
                 self.startingTimeEpoEnt.configure(cursor="ibeam")
+                self.startingTimeEpoEnt.configure(state=DISABLED)
 
                 self.endingTimeStdEnt = ttk.Entry(self.timeLabFrame)
                 self.endingTimeStdEnt.place(relx=0.03, rely=0.67, relheight=0.12
@@ -480,6 +486,7 @@ class Simba:
                 self.endingTimeStdEnt.configure(textvariable=Simba_support.stdEndVar)
                 self.endingTimeStdEnt.configure(takefocus="")
                 self.endingTimeStdEnt.configure(cursor="ibeam")
+                self.endingTimeStdEnt.configure(state=DISABLED)
 
                 self.endingTimeEpoEnt = ttk.Entry(self.timeLabFrame)
                 self.endingTimeEpoEnt.place(relx=0.5, rely=0.67, relheight=0.12
@@ -487,6 +494,7 @@ class Simba:
                 self.endingTimeEpoEnt.configure(textvariable=Simba_support.epoEndVar)
                 self.endingTimeEpoEnt.configure(takefocus="")
                 self.endingTimeEpoEnt.configure(cursor="ibeam")
+                self.endingTimeEpoEnt.configure(state=DISABLED)
 
                 self.endTimeLab = ttk.Label(self.timeLabFrame)
                 self.endTimeLab.place(relx=0.03, rely=0.53, height=24, width=87)
@@ -496,12 +504,11 @@ class Simba:
                 self.endTimeLab.configure(text='''Ending Time''')
 
                 self.stdStartLab = ttk.Label(self.timeLabFrame)
-                self.stdStartLab.place(relx=0.03, rely=0.09, height=44, width=156)
+                self.stdStartLab.place(relx=0.03, rely=0.09, height=44, width=160)
                 self.stdStartLab.configure(background="#d9d9d9")
                 self.stdStartLab.configure(foreground="#000000")
                 self.stdStartLab.configure(relief=FLAT)
-                self.stdStartLab.configure(text='''Starting Time 
-        (dd.mm.yyyy hh:mm:ss)''')
+                self.stdStartLab.configure(text="Starting Time \n(dd.mm.yyyy hh:mm:ss)")
 
                 self.epochLab = ttk.Label(self.timeLabFrame)
                 self.epochLab.place(relx=0.5, rely=0.18, height=24, width=92)
@@ -612,7 +619,7 @@ class Simba:
         # Class for Export
         class Export:
             def __init__(self, top=None):
-                '''This class configures and populates the toplevel window.
+                '''This class configures and populates the Export window.
                    top is the toplevel containing window.'''
                 _bgcolor = '#d9d9d9'  # X11 color: 'gray85'
                 _fgcolor = '#000000'  # X11 color: 'black'
@@ -765,9 +772,8 @@ class Simba:
 
         # Sub Panel Methods
 
-        # Sub Panel Checks to avoid making Singleton Pattern
-        self.countExport = False
-        self.countHost = False
+
+
 
         # Sub Window for the exporting to hosted service
 

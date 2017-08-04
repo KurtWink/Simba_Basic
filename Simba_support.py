@@ -181,12 +181,13 @@ def openHelp():
 
 def saveLocalData():
     '''
-    Writes the currently held jQuery Set to the file locaton through a dialog prompt
-    Lazy Exception handling due to most serious File I/O execeptions being handled by the native dialog
+    Writes the currently held jQuery Set to the file location through a dialog prompt
+    Lazy Exception handling due to most serious File I/O exceptions being handled by the native dialog
     :return:
     '''
     try:
-        file = open(filedialog.asksaveasfilename(filetypes=[("Text Files", "*.txt")]), 'w')
+        file = filedialog.asksaveasfile(mode='w', defaultextension=".txt")
+        # open(filedialog.asksaveasfilename(filetypes=[("Text ", "*.txt")]), 'w')
         file.write(json.dumps(dataSet))
         file.close()
     except:
