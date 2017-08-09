@@ -70,9 +70,9 @@ For example, the first operation I was tasked with was to fuzz data by an arbitr
 
 def stdAdjustList(jObjList, val):
     '''
-    :param jObjList: The jQuary list that will be edited.
+    :param jObjList: The jQuery list that will be edited.
     :param val: A real number by which the standard deviation will be adjusted by.
-    :return: The edited jQuary list to pass into the next phase.
+    :return: The edited jQuery list to pass into the next phase.
     '''
 	
     return list(map(lambda x: x + (val * numpy.std(jObjList)), jObjList))
@@ -80,10 +80,10 @@ def stdAdjustList(jObjList, val):
 
 def stdAdjustPortionList(jObj, val, portion):
     '''
-    :param jObj: The jQuary list that will be edited.
+    :param jObj: The jQuery list that will be edited.
     :param val: A real number by which the standard deviation will be adjusted by.
     :param portion: Percentage of data to be edited at random
-    :return: The edited jQuary list to pass into the next phase.
+    :return: The edited jQuery list to pass into the next phase.
     '''
    
     std = numpy.std(jObj)
@@ -95,4 +95,85 @@ def stdAdjustPortionList(jObj, val, portion):
 But as the data itself changed, a lot of these operations were broken or no longer had a purpose.
 There was also no strict guidelines or operations that were extremely needed. Because of all this, I created a module guideline for creating custom functions to do whatever is needed in the future.
 
+The guideline lies below:
+ ![alt text] (https://github.com/KurtWink/Simba_Basic/blob/master/87c91baf7fbae3636d8b8ad3728fc094.png)
+ 
+ In order to create the a new module, please use the template as a sample and change it from there.
+ 1. Rename Sample Class names 
+ 2. Fill out sample method Name/Attribute
+ 3. For any possible variables needed, create a variable object(corrsponding label, default value) 
+ 4. In the Do method, create the operation that will be preformed on the jQuery Data
+ 5. Finally add the method object to the collectionContainer
+ 
+ Here is an extended example
+ ```Python
+ 
+ 
+ def collectionContainer(): # This name cannot be changed
+    """
+    This is a container class that contains direct lists of the functions and variables that will be displayed in the GUI
+    In order to have a custom class or variable be available, it must be added to these lists.
+    """
+    return [zeroData()]
+ 
+ 
+ 
+ 
+ class zeroData():
 
+    def __init__(self):
+        self.name = "Zero Data"
+        self.attribute = "Zeroed"
+		self.vars = [varObject('Starting Time', ''), varObject('Ending Time','')]
+
+    def Do(self, jQ):
+        import time
+        """
+            :param jObj: The jQuery collection that will be edited
+            :return: The zero inserted jQuery list
+        """
+        epo = jQ['epocCheck']
+        jObj = jQ['dataSet']
+
+        """ 
+            n is the length of the arr
+            x is the value to be looking for
+            in a sorted time, low is element 0 while high is n-1
+        """
+
+            
+            startEpoch = self.vars[0].value
+            endEpoch = self.vars[1].value
+            
+
+            def findFirst(arr, low, high, x, n):
+                if high >= low:
+                    mid = int(low + (high - low) / 2)
+                    if ((mid == 0 or x > float(arr[mid - 1])) and float(arr[mid]) == x):
+                        return mid
+                    elif (x > float(arr[mid])):
+                        return findFirst(arr, (mid + 1), high, x, n)
+                    else:
+                        return findFirst(arr, low, (mid - 1), x, n)
+                return low
+
+            def findLast(arr, low, high, x, n):
+
+                if high >= low:
+                    mid = int(low + (high - low) / 2)
+                    if ((mid == (n - 1) or x < float(arr[mid + 1])) and float(arr[mid]) == x):
+                        return mid
+                    elif (x < float(arr[mid])):
+                        return findLast(arr, low, (mid - 1), x, n)
+                    else:
+                        return findLast(arr, (mid + 1), high, x, n)
+                return low
+
+            ln = len(jObj['series'][0]['timestamps'])
+            timeRange2 = [x for x in range(
+                findFirst(jObj['series'][0]['timestamps'], 0, ln - 1, float(startEpoch), ln),
+                findLast(jObj['series'][0]['timestamps'], 0, ln - 1, float(endEpoch), ln))]
+
+            for x in timeRange2:
+                jObj['series'][0]['metrics']['interval-kwh']['floatValues'][x] = 0
+```
