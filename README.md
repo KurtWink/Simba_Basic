@@ -38,7 +38,7 @@ Currently, there are three GUI panels
 * Hosted Service Panel
 * Export Panel
 
-Each of these were finally gutted and merged into one class with extensions. The automation used expected each panel to be it's own application so the rootwork is unstable as a result.
+Each of these were finally gutted and merged into one class with extensions. The automation used expected each panel to be its own application so the rootwork is unstable as a result.
 
 Internally here are things to note:
 * Blanket Exception Handling:
@@ -47,16 +47,51 @@ Internally here are things to note:
 * Fixed Window:
 
 A fully polished GUI would support different resolutions and would be resizable. To avoid worrying about widgets bugging out at certain sizes, the main frame is small and locked.
-* Data Deletion
+* Data Deletion:
+
 As far as Simba's functions. It's not supposed to be a database management system. It's practical to be able to send data back for storing purposes, however there is no current way to delete records from the Simba interface. Upload at your own risk
 * Stress load:
 
-From the samples I was able to pull, it took around 8 second to simply to load data. It slightly is unresponsive during this time. I suspect a solution would be to put the process on a different thread. Or to do whatever standard practice is done for problems like this
+From the samples I was able to pull, it took around 8 seconds simply to load data. It slightly is unresponsive during this time. I suspect a solution would be to put the process on a different thread. Or to do whatever standard practice is done for problems like this
 I'm unsure if throwing 20 years or so of a stress test will make it crash, I never had enough data to test that. However, if there are issues the loading from a direct file was far faster and may provide a temporary solution.
 * Undo/Redo Stack:
 
-I did not implement this, though wanted to. It could be as simple as storing the pre operation JSON data and reverting it on the Undo/Redo Design pattern. But there are tradeoffs in scalability, if you were handling three years worth of data. I'm unsure how practical it would be for storage to have iterative hard copies between each function that you apply to them.
+I did not implement this, though wanted to. It could be as simple as storing the pre operation JSON data and reverting it on the Undo/Redo Design pattern. But there are trade offs in scalability, if you were handling three years worth of data. I'm unsure how practical it would be for storage to have iterative deep copies between each function that you apply to them.
 * Saving Files:
 
 Saving to the local file system works as expected. But, in theory if you store a massive amount of JSON data in a text doc all in one line....it tends to either crash or hand for large periods of time when opening them in a file viewer. So they may be volatile to open without a better text editor beyond notepad.
+
+
+### Module Uses/Assembly
+
+In the beginning, there were specific operations I was asked to perform on the some of the sample data. 
+For example, the first operation I was tasked with was to fuzz data by an arbitrary amount of that data's standard deviation. Rather simple and it looked like this. 
+'''python
+def stdAdjustList(jObjList, val):
+    """
+
+    :param jObjList: The jQuary list that will be edited.
+    :param val: A real number by which the standard deviation will be adjusted by.
+    :return: The edited jQuary list to pass into the next phase.
+    """
+    return list(map(lambda x: x + (val * numpy.std(jObjList)), jObjList))
+
+
+def stdAdjustPortionList(jObj, val, portion):
+    """
+
+    :param jObj: The jQuary list that will be edited.
+    :param val: A real number by which the standard deviation will be adjusted by.
+    :param portion: Percentage of data to be edited at random
+    :return: The edited jQuary list to pass into the next phase.
+    """
+    std = numpy.std(jObj)
+    for n in range(0, len(jObj) - 1):
+        if float(random.random()) < (portion * .01):
+            jObj[n] = jObj[n] + (std * val)
+    return jObj
+'''
+But as the data itself changed, a lot of these operations were broken or no longer had a purpose.
+There was also no strict guidelines or operations that were extremely needed. Because of all this, I created a module guideline for creating custom functions to do whatever is needed in the future.
+
 
