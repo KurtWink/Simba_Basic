@@ -41,17 +41,22 @@ Currently, there are three GUI panels
 Each of these were finally gutted and merged into one class with extensions. The automation used expected each panel to be it's own application so the rootwork is unstable as a result.
 
 Internally here are things to note:
-* Blanket Exception Handling
+* Blanket Exception Handling:
+
 90% of code tends to address 10% of the issues when it comes to runtime and compile time errors. Since this is mainly a conceptual program, other than specific exceptions that I outlined in methods, additional ones are caught and thrown out. I'd hope someone would not try to pull data without an internet connection and other redundant issues like these. However real programs tend to address these and at least report specific issues for every type of infringement. Simba currently does not.
-* Fixed Window
+* Fixed Window:
+
 A fully polished GUI would support different resolutions and would be resizable. To avoid worrying about widgets bugging out at certain sizes, the main frame is small and locked.
 * Data Deletion
 As far as Simba's functions. It's not supposed to be a database management system. It's practical to be able to send data back for storing purposes, however there is no current way to delete records from the Simba interface. Upload at your own risk
-* Stress load
+* Stress load:
+
 From the samples I was able to pull, it took around 8 second to simply to load data. It slightly is unresponsive during this time. I suspect a solution would be to put the process on a different thread. Or to do whatever standard practice is done for problems like this
 I'm unsure if throwing 20 years or so of a stress test will make it crash, I never had enough data to test that. However, if there are issues the loading from a direct file was far faster and may provide a temporary solution.
-* Undo/Redo Stack
+* Undo/Redo Stack:
+
 I did not implement this, though wanted to. It could be as simple as storing the pre operation JSON data and reverting it on the Undo/Redo Design pattern. But there are tradeoffs in scalability, if you were handling three years worth of data. I'm unsure how practical it would be for storage to have iterative hard copies between each function that you apply to them.
-* Saving Files
+* Saving Files:
+
 Saving to the local file system works as expected. But, in theory if you store a massive amount of JSON data in a text doc all in one line....it tends to either crash or hand for large periods of time when opening them in a file viewer. So they may be volatile to open without a better text editor beyond notepad.
 
