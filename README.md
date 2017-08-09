@@ -27,7 +27,7 @@ Modules need to be placed in the same directory of Simba files in order for pyth
 
 ### Design Structure
 The GUI framework is tkInter, and was chosen because it was native; supported on the majority of operating systems, had well written documentation, and is easily automated.
-Simba runs largely from two python files. One being the GUI framework file, and the other being the support module. The framework file contains all the GUI widgets, locations, labels and everything else visual. The support module contains the meat of the program, action responses that are called by command along with variables are inside this module. All the data loading, editing, and http processing is done there.
+Simba runs largely from two python files. One being the GUI framework file, and the other being the support module. The framework file contains all the GUI widgets, locations, labels and everything else visual. The support module contains the meat of the program, action responses that are called by commands along with variables that are inside this module. All the data loading, editing, and http processing is done there.
 
 These unconventional choices were largely made because of the changing requirements. Typically, for the purposes of scope and clarity it is advised to have the whole GUI and it's events in one file. Those events may range from simple to complex but the process should be done in other imports while the overall organization and readability is handled in the main file.
 Without a clear direction of a visual layout, as features rolled in, the GUI needed to be adjusted even if there was space initially planned ahead.
