@@ -67,6 +67,7 @@ Saving to the local file system works as expected. But, in theory if you store a
 In the beginning, there were specific operations I was asked to perform on the some of the sample data. 
 For example, the first operation I was tasked with was to fuzz data by an arbitrary amount of that data's standard deviation. Rather simple and it looked like this. 
 '''python
+
 def stdAdjustList(jObjList, val):
    
 
