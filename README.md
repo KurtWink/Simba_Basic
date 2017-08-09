@@ -96,7 +96,7 @@ But as the data itself changed, a lot of these operations were broken or no long
 There was also no strict guidelines or operations that were extremely needed. Because of all this, I created a module guideline for creating custom functions to do whatever is needed in the future.
 
 The guideline lies below:
- ![alt text] (https://github.com/KurtWink/Simba_Basic/blob/master/87c91baf7fbae3636d8b8ad3728fc094.png)
+ ![alt text](https://github.com/KurtWink/Simba_Basic/blob/master/87c91baf7fbae3636d8b8ad3728fc094.png "Guide")
  
  In order to create the a new module, please use the template as a sample and change it from there.
  1. Rename Sample Class names 
@@ -131,6 +131,7 @@ The guideline lies below:
         """
             :param jObj: The jQuery collection that will be edited
             :return: The zero inserted jQuery list
+			This method zeros data in a subset timerange within a set of jQuery Data
         """
         epo = jQ['epocCheck']
         jObj = jQ['dataSet']
