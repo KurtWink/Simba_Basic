@@ -22,6 +22,8 @@ except ImportError:
 import importlib
 import json
 import time
+import webbrowser
+import os
 from tkinter import simpledialog
 from base64 import b64encode
 from tkinter import filedialog
@@ -176,7 +178,7 @@ def getMod():
 
 
 def openHelp():
-    pass
+    webbrowser.open('file://' + os.path.realpath("SIMBA_README.html"))
 
 
 def saveLocalData():
