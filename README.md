@@ -68,23 +68,23 @@ In the beginning, there were specific operations I was asked to perform on the s
 For example, the first operation I was tasked with was to fuzz data by an arbitrary amount of that data's standard deviation. Rather simple and it looked like this. 
 '''python
 def stdAdjustList(jObjList, val):
-    """
+   
 
     :param jObjList: The jQuary list that will be edited.
     :param val: A real number by which the standard deviation will be adjusted by.
     :return: The edited jQuary list to pass into the next phase.
-    """
+    
     return list(map(lambda x: x + (val * numpy.std(jObjList)), jObjList))
 
 
 def stdAdjustPortionList(jObj, val, portion):
-    """
+    
 
     :param jObj: The jQuary list that will be edited.
     :param val: A real number by which the standard deviation will be adjusted by.
     :param portion: Percentage of data to be edited at random
     :return: The edited jQuary list to pass into the next phase.
-    """
+   
     std = numpy.std(jObj)
     for n in range(0, len(jObj) - 1):
         if float(random.random()) < (portion * .01):
