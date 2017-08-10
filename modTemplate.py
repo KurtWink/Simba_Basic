@@ -1,3 +1,6 @@
+#@Kurt Winkelmann
+# NRECA 2017
+
 def collectionContainer(): # This name cannot be changed
     """
     This is a container class that contains direct lists of the functions and variables that will be displayed in the GUI
