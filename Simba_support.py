@@ -143,7 +143,7 @@ def getLocalData():
         globals()['dataSet'] = json.loads(x_file.read())
     except:
         messagebox.showerror("Error",
-                             "This dats is not JSON or contains errors")
+                             "This data is not JSON or contains errors")
     if ('error' in globals()['dataSet']) or (globals()['dataSet'] == {}):
         globals()["dataSet"] = None
         globals()["loadBarVar"].set(0)
