@@ -96,7 +96,7 @@ def stdAdjustPortionList(jObj, val, portion):
 ```
 But as the data itself changed, a lot of these operations were broken or no longer had a purpose.
 There was also no strict guidelines or operations that were extremely needed. Because of all this, I created a module guideline for creating custom functions to do whatever is needed in the future.
-In theory, much like programs. Besides physical restraints there is not much that is limited by the system. Yet it isn't going to make itself. A really demanding request will request an extremely complex module. The real constraints are the imagination.
+In theory, much like programs. Besides physical restraints there is not much that is limited by the system. Yet it isn't going to make itself. A really demanding request will require an extremely complex module. The real constraints are the imagination.
 
 The guideline lies below:
  ![alt text](https://github.com/KurtWink/Simba_Basic/blob/master/87c91baf7fbae3636d8b8ad3728fc094.png "Guide")
