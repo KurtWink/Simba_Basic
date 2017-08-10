@@ -32,6 +32,7 @@ Simba runs largely from two python files. One being the GUI framework file, and 
 These unconventional choices were largely made because of the changing requirements. Typically, for the purposes of scope and clarity it is advised to have the whole GUI and it's events in one file. Those events may range from simple to complex but the process should be done in other imports while the overall organization and readability is handled in the main file.
 Without a clear direction of a visual layout, as features rolled in, the GUI needed to be adjusted even if there was space initially planned ahead.
 I actually automated the base visual layout because of these changes. The initial top level windows were created as barren widgets, much like sketch or diagram. As they GUI evolved, the 'meat' of the support file was reused while the visual GUI was discarded and redone from scratch with the automation changes.
+There are still relevant methods in the main file. These are largely to update the state of certain visuals and use selection in order to handle certain properties of objects. However, these may or may not be recycled if the visual design changed.
 
 Currently, there are three GUI panels
 * Main Simba Frame
@@ -39,6 +40,7 @@ Currently, there are three GUI panels
 * Export Panel
 
 Each of these were finally gutted and merged into one class with extensions. The automation used expected each panel to be its own application so the rootwork is unstable as a result.
+
 
 Internally here are things to note:
 * Blanket Exception Handling:
@@ -94,6 +96,7 @@ def stdAdjustPortionList(jObj, val, portion):
 ```
 But as the data itself changed, a lot of these operations were broken or no longer had a purpose.
 There was also no strict guidelines or operations that were extremely needed. Because of all this, I created a module guideline for creating custom functions to do whatever is needed in the future.
+In theory, much like programs. Besides physical restraints there is not much that is limited by the system. Yet it isn't going to make itself. A really demanding request will request an extremely complex module. The real constraints are the imagination.
 
 The guideline lies below:
  ![alt text](https://github.com/KurtWink/Simba_Basic/blob/master/87c91baf7fbae3636d8b8ad3728fc094.png "Guide")
@@ -101,8 +104,8 @@ The guideline lies below:
  In order to create the a new module, please use the template as a sample and change it from there.
  1. Rename Sample Class names 
  2. Fill out sample method Name/Attribute
- 3. For any possible variables needed, create a variable object(corrsponding label, default value) 
- 4. In the Do method, create the operation that will be preformed on the jQuery Data
+ 3. For any possible variables needed, create a variable object(corresponding label, default value) 
+ 4. In the Do method, create the operation that will be performed on the jQuery Data
  5. Finally add the method object to the collectionContainer
  
  Here is an extended example
@@ -117,8 +120,6 @@ The guideline lies below:
     return [zeroData()]
  
  
- 
- 
  class zeroData():
 
     def __init__(self):
@@ -127,7 +128,6 @@ The guideline lies below:
 		self.vars = [varObject('Starting Time', ''), varObject('Ending Time','')]
 
     def Do(self, jQ):
-        import time
         """
             :param jObj: The jQuery collection that will be edited
             :return: The zero inserted jQuery list
@@ -178,3 +178,45 @@ The guideline lies below:
             for x in timeRange2:
                 jObj['series'][0]['metrics']['interval-kwh']['floatValues'][x] = 0
 ```
+
+### Thoughts and Moving Forward
+
+Simba is glorified data loader that runs scripts/usermade code 
+Very late in the stages of building it, I realized that without native generation for the data itself. Simba is not much more than a emacs macro or Eclipse/Visual Studio standalone plugin. 
+It currently is a toolbelt without tools, and without user code it does not do anything beside file handling. 
+Why didn't I write this in MATLAB? 
+
+Here is some reflection:
+
+* GUI
+
+I would never use tkInter again. Even more so if advance graphical modules and displays are needed. It works fine as file management GUI but beyond simple application, I do not endorse it.
+* REST Standards
+
+If Simba ever expanded beyond the same data format as the sample jQuery data, it would fall apart. Integrating the usable REST formats would allow different databases to be used with simba.
+* Web Application
+
+There can be an argument made that Simba could easily be done through a web browser. If that was the case, it could be conjoined with a platform that shares user made code and even provides analytics like OMF.
+* Visual Appeal
+
+It's bland, it could use a color scheme and graphics along with an serious discussion on types of users regarding ease of use.
+A visual representation beyond listed tags of the data would improve the experience.
+* GUI Testing
+
+This is largely supported more on Oracle and Microsoft based GUIs. However, creating a product that can be built while having a dedicated testing unit would be immensely more productive.
+* Complex Modules
+
+If advanced analytics is required for user mods, then it would be wise to base Simba more on a plugin system to allow custom integration with extremely abstract analytical and statistical needs.
+* Generation and State
+
+I'm currently unsure if it would be useful right now, but having real time knowledge of the progression of the state of the simulated system could be valuable in the future. 
+* Simulating actively instead of reactively
+
+It's quite possible to do this. When a module is given the dataset, you would view it in pieces of information and base your operations on only acting on relevant information at the time. 
+
+### Closing
+All the messy sketches and test files can be found at https://github.com/KurtWink/Simba_Basic
+This includes all the previous verious that I threw out.
+
+
+
