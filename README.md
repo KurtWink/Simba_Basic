@@ -2,8 +2,8 @@
 Simba_Basic is an early stage prototype for an industrial control system simulation and design tool.
 Feel free to edit the source at your own discretion
 
-Users are able to create their own Python Modules which are used to perform custom operations on a set of jQuery data that is loaded into the tool.
-The modified jQuery data is then given a tag classified by the operations performed, and can be either saved to a local file system or be made as a HTTP POST request as a payload.
+Users are able to create their own Python Modules which are used to perform custom operations on a set of JSON data that is loaded into the tool.
+The modified JSON data is then given a tag classified by the operations performed, and can be either saved to a local file system or be made as a HTTP POST request as a payload.
 
 ### Current Support
 The default url assembly is configured primarily for the ease of GridState use. However, data can be GET/POST from any url location as long as the host follows the same REST structure.
@@ -72,9 +72,9 @@ For example, the first operation I was tasked with was to fuzz data by an arbitr
 
 def stdAdjustList(jObjList, val):
     '''
-    :param jObjList: The jQuery list that will be edited.
+    :param jObjList: The JSON list that will be edited.
     :param val: A real number by which the standard deviation will be adjusted by.
-    :return: The edited jQuery list to pass into the next phase.
+    :return: The edited JSON list to pass into the next phase.
     '''
 	
     return list(map(lambda x: x + (val * numpy.std(jObjList)), jObjList))
@@ -82,10 +82,10 @@ def stdAdjustList(jObjList, val):
 
 def stdAdjustPortionList(jObj, val, portion):
     '''
-    :param jObj: The jQuery list that will be edited.
+    :param jObj: The JSON list that will be edited.
     :param val: A real number by which the standard deviation will be adjusted by.
     :param portion: Percentage of data to be edited at random
-    :return: The edited jQuery list to pass into the next phase.
+    :return: The edited JSON list to pass into the next phase.
     '''
    
     std = numpy.std(jObj)
@@ -105,7 +105,7 @@ The guideline lies below:
  1. Rename Sample Class names 
  2. Fill out sample method Name/Attribute
  3. For any possible variables needed, create a variable object(corresponding label, default value) 
- 4. In the Do method, create the operation that will be performed on the jQuery Data
+ 4. In the Do method, create the operation that will be performed on the JSON Data
  5. Finally add the method object to the collectionContainer
  
  Here is an extended example
@@ -129,9 +129,9 @@ The guideline lies below:
 
     def Do(self, jQ):
         """
-            :param jObj: The jQuery collection that will be edited
-            :return: The zero inserted jQuery list
-			This method zeros data in a subset timerange within a set of jQuery Data
+            :param jObj: The JSON collection that will be edited
+            :return: The zero inserted JSON list
+			This method zeros data in a subset timerange within a set of JSON Data
         """
         epo = jQ['epocCheck']
         jObj = jQ['dataSet']
@@ -193,7 +193,7 @@ Here is some reflection:
 I would never use tkInter again. Even more so if advance graphical modules and displays are needed. It works fine as file management GUI but beyond simple application, I do not endorse it.
 * REST Standards
 
-If Simba ever expanded beyond the same data format as the sample jQuery data, it would fall apart. Integrating the usable REST formats would allow different databases to be used with simba.
+If Simba ever expanded beyond the same data format as the sample JSON data, it would fall apart. Integrating the usable REST formats would allow different databases to be used with simba.
 * Web Application
 
 There can be an argument made that Simba could easily be done through a web browser. If that was the case, it could be conjoined with a platform that shares user made code and even provides analytics like OMF.
